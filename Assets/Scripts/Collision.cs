@@ -14,14 +14,35 @@ public class Collision : MonoBehaviour
     AudioSource audioSource;
 
     bool isTransitioning = false;
+    bool collisionDisabled = false;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
+
+    void Update()
+    {
+        RespondToDebugKeys();
+    }
+
+    void RespondToDebugKeys()
+    {
+        if (Input.GetKey(KeyCode.L))
+        {
+            LoadNextLevel();
+            // Invoke("LoadNextLevel", levelLoadDelay);
+        }
+        else if (Input.GetKey(KeyCode.C))
+        {
+            // Pressing C toggles collisionDisabled to True
+            collisionDisabled = !collisionDisabled; // toggle collision
+        }
+    }
+
     void OnCollisionEnter(UnityEngine.Collision collision)
     {
-        if (isTransitioning) { return; }
+        if (isTransitioning || collisionDisabled) { return; }
 
         switch (collision.gameObject.tag)
         {
